@@ -18,7 +18,7 @@
 
 #define lowDensityDuration=10
 #define mediumDensityDuration=20
-#define largeDensityDuration=30
+#define highDensityDuration=30
 
 int road1MinUltraSensor=0;
 int road1MaxUltraSensor=0;
@@ -37,12 +37,90 @@ int road2RfidSensor=0;
 int road3RfidSensor=0;
 int road4RfidSensor=0;
 
+
+
+
+void readUltraSonicSensorData(){
+
+}
+
+String getRoadDensity(String roadType){
+
+  if(roadType=="road1"){
+
+    if(road1MinUltraSensor==0 && road1MaxUltraSensor==0){
+      return "low density";
+    }
+    if(road1MinUltraSensor==1 && road1MaxUltraSensor==0){
+      return "medium density";
+    }
+    if(road1MinUltraSensor==1 && road1MaxUltraSensor==1){
+      return "high density";
+    }
+
+
+  }
+  else if(roadType=="road2"){
+
+    if(road2MinUltraSensor==0 && road2MaxUltraSensor==0){
+      return "low density";
+    }
+    if(road2MinUltraSensor==1 && road2MaxUltraSensor==0){
+      return "medium density";
+    }
+    if(road2MinUltraSensor==1 && road2MaxUltraSensor==1){
+      return "high density";
+    }
+
+  }
+  else if(roadType=="road3"){
+
+    if(road3MinUltraSensor==0 && road3MaxUltraSensor==0){
+      return "low density";
+    }
+    if(road3MinUltraSensor==1 && road3MaxUltraSensor==0){
+      return "medium density";
+    }
+    if(road3MinUltraSensor==1 && road3MaxUltraSensor==1){
+      return "high density";
+    }
+
+  }
+  else{
+
+    if(road4MinUltraSensor==0 && road4MaxUltraSensor==0){
+      return "low density";
+    }
+    if(road4MinUltraSensor==1 && road4MaxUltraSensor==0){
+      return "medium density";
+    }
+    if(road4MinUltraSensor==1 && road4MaxUltraSensor==1){
+      return "high density";
+    }
+
+  }
+
+
+}
+
+void genarateDensityBasedTrafficSignalProcess(){
+
+int roadDensity[4];
+int roads[4];
+
+
+
+}
+
+void readRfidSensorData(){
+
+}
+
 void setup() {
-  // put your setup code here, to run once:
+ 
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  
 }
