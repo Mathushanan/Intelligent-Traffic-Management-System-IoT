@@ -14,11 +14,36 @@
 #define road4GreenLedPin  11
 #define road4YellowLedPin 12
 
-#define yellowLightDuration=5
+#define yellowLightDuration    5
 
-#define lowDensityDuration=10
-#define mediumDensityDuration=20
-#define highDensityDuration=30
+#define lowDensityDuration     10
+#define mediumDensityDuration  20
+#define highDensityDuration    30
+
+#define Road1_Sensor1_TriggerPin 13
+#define Road1_Sensor1_EchoPin    14
+
+#define Road1_Sensor2_TriggerPin 15 
+#define Road1_Sensor2_EchoPin    16
+
+#define Road2_Sensor1_TriggerPin 17
+#define Road2_Sensor1_EchoPin    18
+
+#define Road2_Sensor2_TriggerPin 19
+#define Road2_Sensor2_EchoPin    20
+
+#define Road3_Sensor1_TriggerPin 21
+#define Road3_Sensor1_EchoPin    22
+
+#define Road3_Sensor2_TriggerPin 23
+#define Road3_Sensor2_EchoPin    24
+
+#define Road4_Sensor1_TriggerPin 25
+#define Road4_Sensor1_EchoPin    26
+
+#define Road4_Sensor2_TriggerPin 27 
+#define Road4_Sensor2_EchoPin    28
+
 
 int road1MinUltraSensor=0;
 int road1MaxUltraSensor=0;
@@ -32,7 +57,54 @@ int road3MaxUltraSensor=0;
 int road4MinUltraSensor=0;
 int road4MaxUltraSensor=0;
 
-void readUltraSonicSensorData(){
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(Road1_Sensor1_TriggerPin, OUTPUT); 
+  pinMode(Road1_Sensor1_EchoPin, INPUT);  
+  pinMode(Road1_Sensor2_TriggerPin, OUTPUT); 
+  pinMode(Road1_Sensor2_EchoPin, INPUT);  
+
+  pinMode(Road2_Sensor1_TriggerPin, OUTPUT); 
+  pinMode(Road2_Sensor1_EchoPin, INPUT);  
+  pinMode(Road2_Sensor2_TriggerPin, OUTPUT); 
+  pinMode(Road2_Sensor2_EchoPin, INPUT);  
+
+  pinMode(Road3_Sensor1_TriggerPin, OUTPUT); 
+  pinMode(Road3_Sensor1_EchoPin, INPUT);  
+  pinMode(Road3_Sensor2_TriggerPin, OUTPUT); 
+  pinMode(Road3_Sensor2_EchoPin, INPUT); 
+   
+  pinMode(Road4_Sensor1_TriggerPin, OUTPUT); 
+  pinMode(Road4_Sensor1_EchoPin, INPUT);  
+  pinMode(Road4_Sensor2_TriggerPin, OUTPUT); 
+  pinMode(Road4_Sensor2_EchoPin, INPUT);  
+
+}
+
+void assignUltraSonicSensorStatus(){
+
+}
+void loop() {
+  
+}
+
+int findDistanceFromUltraSonicSensorData(int triggerPin,int echoPin){
+
+  long duration;
+  long distance;
+
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration_1 * 0.034 / 2;
+
+  return distance;
 
 }
 
@@ -263,11 +335,4 @@ void readRfidSensorData(){
 
 }
 
-void setup() {
- 
 
-}
-
-void loop() {
-  
-}
