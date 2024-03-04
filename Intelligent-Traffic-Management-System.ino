@@ -1,3 +1,6 @@
+#include <SPI.h>
+#include <MFRC522.h>
+
 #define road1RedLedPin    1
 #define road1GreenLedPin  2
 #define road1YellowLedPin 3
@@ -46,6 +49,28 @@
 
 #define ThresholdValueUltraSonicSensor 50
 
+#define Road1_SS_PIN  29  
+#define Road1_RST_PIN 30 
+
+#define Road2_SS_PIN  31  
+#define Road2_RST_PIN 32 
+
+#define Road3_SS_PIN  33 
+#define Road3_RST_PIN 34
+
+#define Road4_SS_PIN  35  
+#define Road4_RST_PIN 36 
+
+MFRC522 Road1_mfrc522(Road1_SS_PIN,Road1_RST_PIN); 
+MFRC522 Road2_mfrc522(Road2_SS_PIN,Road2_RST_PIN); 
+MFRC522 Road3_mfrc522(Road3_SS_PIN,Road3_RST_PIN); 
+MFRC522 Road4_mfrc522(Road4_SS_PIN,Road4_RST_PIN); 
+
+bool isRoad1_Rfid_Detected = false; 
+bool isRoad2_Rfid_Detected = false; 
+bool isRoad3_Rfid_Detected = false; 
+bool isRoad4_Rfid_Detected = false; 
+
 
 int road1MinUltraSensor=0;
 int road1MaxUltraSensor=0;
@@ -62,6 +87,8 @@ int road4MaxUltraSensor=0;
 int roadDensity[4];
 int roadType[4]={1,2,3,4};
 
+bool emergencyVehiclePresent=false;
+
 
 
 void assignUltraSonicSensorStatus();
@@ -77,12 +104,23 @@ void openSuitableRoad(int roadNumber);
 void openRoadsInOrder();
 void genarateDensityBasedTrafficSignalProcess();
 
+void checkForEmergencyVehicles();
+void isEmergencyVehiclePresent();
+void genarateEmergencyBasedTrafficSignalProcess();
+
 
 
 void setup() {
 
   Serial.begin(9600);
 
+  SPI.begin();
+
+  Road1_mfrc522.PCD_Init(); 
+  Road2_mfrc522.PCD_Init(); 
+  Road3_mfrc522.PCD_Init(); 
+  Road4_mfrc522.PCD_Init(); 
+ 
   pinMode(Road1_Sensor1_TriggerPin, OUTPUT); 
   pinMode(Road1_Sensor1_EchoPin, INPUT);  
   pinMode(Road1_Sensor2_TriggerPin, OUTPUT); 
@@ -107,9 +145,52 @@ void setup() {
 
 
 void loop() {
-
-  genarateDensityBasedTrafficSignalProcess();
   
+  checkForEmergencyVehicles();
+
+  if(emergencyVehiclePresent){
+
+    genarateEmergencyBasedTrafficSignalProcess();
+
+  }else{
+
+    genarateDensityBasedTrafficSignalProcess();
+
+  }
+  
+  
+}
+
+void assignRfidSensorStatus(){
+  
+  if (Road1_mfrc522.PICC_IsNewCardPresent() && Road1_mfrc522.PICC_ReadCardSerial()) {
+
+    iisRoad1_Rfid_Detected = true;
+
+  } else {
+
+    isRoad1_Rfid_Detected = false;
+
+  }
+
+}
+
+void checkForEmergencyVehicles(){
+
+  if(isEmergencyVehiclePresent()){
+
+    emergencyVehiclePresent=true;
+
+  }
+
+}
+
+void isEmergencyVehiclePresent(){
+
+}
+
+void genarateEmergencyBasedTrafficSignalProcess(){
+
 }
 
 void genarateDensityBasedTrafficSignalProcess(){
@@ -360,18 +441,5 @@ void openRoad4(int greenLightDuration){
 
 
 
-
-
-
-
-
-int road1RfidSensor=0;
-int road2RfidSensor=0;
-int road3RfidSensor=0;
-int road4RfidSensor=0;
-
-void readRfidSensorData(){
-
-}
 
 
