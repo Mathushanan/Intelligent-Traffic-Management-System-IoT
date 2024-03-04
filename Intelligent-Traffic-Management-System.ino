@@ -59,6 +59,26 @@ int road3MaxUltraSensor=0;
 int road4MinUltraSensor=0;
 int road4MaxUltraSensor=0;
 
+int roadDensity[4];
+int roadType[4]={1,2,3,4};
+
+
+
+void assignUltraSonicSensorStatus();
+int findDistanceFromUltraSonicSensorData(int triggerPin,int echoPin);
+String getRoadDensity(String roadType);
+void assignRoadDensity();
+void sortRoadsInDecendingOrder();
+void openRoad1(int greenLightDuration);
+void openRoad2(int greenLightDuration);
+void openRoad3(int greenLightDuration);
+void openRoad4(int greenLightDuration);
+void openSuitableRoad(int roadNumber);
+void openRoadsInOrder();
+void genarateDensityBasedTrafficSignalProcess();
+
+
+
 void setup() {
 
   Serial.begin(9600);
@@ -85,6 +105,31 @@ void setup() {
 
 }
 
+
+void loop() {
+
+  genarateDensityBasedTrafficSignalProcess();
+  
+}
+
+void genarateDensityBasedTrafficSignalProcess(){
+  
+  assignRoadDensity();
+  sortRoadsInDecendingOrder();
+  openRoadsInOrder();
+
+}
+
+void assignRoadDensity(){
+
+  assignUltraSonicSensorStatus();
+  roadDensity[0]=getRoadDensity("road1");
+  roadDensity[1]=getRoadDensity("road2");
+  roadDensity[2]=getRoadDensity("road3");
+  roadDensity[3]=getRoadDensity("road4");
+
+}
+
 void assignUltraSonicSensorStatus(){
 
   road1MinUltraSensor=findDistanceFromUltraSonicSensorData(Road1_MinUltraSensor_TriggerPin,Road1_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
@@ -99,10 +144,6 @@ void assignUltraSonicSensorStatus(){
   road4MinUltraSensor=findDistanceFromUltraSonicSensorData(Road4_MinUltraSensor_TriggerPin,Road4_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
   road4MaxUltraSensor=findDistanceFromUltraSonicSensorData(Road4_MaxUltraSensor_TriggerPin,Road4_MaxUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
 
-}
-
-void loop() {
-  
 }
 
 int findDistanceFromUltraSonicSensorData(int triggerPin,int echoPin){
@@ -182,18 +223,6 @@ String getRoadDensity(String roadType){
 
 }
 
-int roadDensity[4];
-int roadType[4]={1,2,3,4};
-
-void assignRoadDensity(){
-
-  roadDensity[0]=getRoadDensity("road1");
-  roadDensity[1]=getRoadDensity("road2");
-  roadDensity[2]=getRoadDensity("road3");
-  roadDensity[3]=getRoadDensity("road4");
-
-}
-
 void sortRoadsInDecendingOrder(){
 
   for(int i=0;i<3;i++){
@@ -214,8 +243,34 @@ void sortRoadsInDecendingOrder(){
 
     }
   }
+}
 
+void openRoadsInOrder(){
 
+  openSuitableRoad(roadType[0]);
+  openSuitableRoad(roadType[1]);
+  openSuitableRoad(roadType[2]);
+  openSuitableRoad(roadType[3]);
+
+}
+
+void openSuitableRoad(int roadNumber){
+
+  if(roadNumber==1){
+    openRoad1();
+  }
+
+  if(roadNumber==2){
+    openRoad2();
+  }
+
+  if(roadNumber==3){
+    openRoad3();
+  }
+
+  if(roadNumber==4){
+    openRoad4();
+  }
 
 }
 
@@ -303,43 +358,12 @@ void openRoad4(int greenLightDuration){
 
 }
 
-void openSuitableRoad(int roadNumber){
-
-  if(roadNumber==1){
-    openRoad1();
-  }
-
-  if(roadNumber==2){
-    openRoad2();
-  }
-
-  if(roadNumber==3){
-    openRoad3();
-  }
-
-  if(roadNumber==4){
-    openRoad4();
-  }
-
-}
-
-void openRoadsInOrder(){
-
-  openSuitableRoad(roadType[0]);
-  openSuitableRoad(roadType[1]);
-  openSuitableRoad(roadType[2]);
-  openSuitableRoad(roadType[3]);
-
-}
 
 
-void genarateDensityBasedTrafficSignalProcess(){
-  
-  assignRoadDensity();
-  sortRoadsInDecendingOrder();
-  openRoadsInOrder();
 
-}
+
+
+
 
 int road1RfidSensor=0;
 int road2RfidSensor=0;
