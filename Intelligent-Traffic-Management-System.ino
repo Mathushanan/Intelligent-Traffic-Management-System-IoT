@@ -20,29 +20,31 @@
 #define mediumDensityDuration  20
 #define highDensityDuration    30
 
-#define Road1_Sensor1_TriggerPin 13
-#define Road1_Sensor1_EchoPin    14
+#define Road1_MinUltraSensor_TriggerPin 13
+#define Road1_MinUltraSensor_EchoPin    14
 
-#define Road1_Sensor2_TriggerPin 15 
-#define Road1_Sensor2_EchoPin    16
+#define Road1_MaxUltraSensor_TriggerPin 15 
+#define Road1_MaxUltraSensor_EchoPin    16
 
-#define Road2_Sensor1_TriggerPin 17
-#define Road2_Sensor1_EchoPin    18
+#define Road2_MinUltraSensor_TriggerPin 17
+#define Road2_MinUltraSensor_EchoPin    18
 
-#define Road2_Sensor2_TriggerPin 19
-#define Road2_Sensor2_EchoPin    20
+#define Road2_MaxUltraSensor_TriggerPin 19
+#define Road2_MaxUltraSensor_EchoPin    20
 
-#define Road3_Sensor1_TriggerPin 21
-#define Road3_Sensor1_EchoPin    22
+#define Road3_MinUltraSensor_TriggerPin 21
+#define Road3_MinUltraSensor_EchoPin    22
 
-#define Road3_Sensor2_TriggerPin 23
-#define Road3_Sensor2_EchoPin    24
+#define Road3_MaxUltraSensor_TriggerPin 23
+#define Road3_MaxUltraSensor_EchoPin    24
 
-#define Road4_Sensor1_TriggerPin 25
-#define Road4_Sensor1_EchoPin    26
+#define Road4_MinUltraSensor_TriggerPin 25
+#define Road4_MinUltraSensor_EchoPin    26
 
-#define Road4_Sensor2_TriggerPin 27 
-#define Road4_Sensor2_EchoPin    28
+#define Road4_MaxUltraSensor_TriggerPin 27 
+#define Road4_MaxUltraSensor_EchoPin    28
+
+#define ThresholdValueUltraSonicSensor 50
 
 
 int road1MinUltraSensor=0;
@@ -85,7 +87,20 @@ void setup() {
 
 void assignUltraSonicSensorStatus(){
 
+  road1MinUltraSensor=findDistanceFromUltraSonicSensorData(Road1_MinUltraSensor_TriggerPin,Road1_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+  road1MaxUltraSensor=findDistanceFromUltraSonicSensorData(Road1_MaxUltraSensor_TriggerPin,Road1_MaxUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+
+  road2MinUltraSensor=findDistanceFromUltraSonicSensorData(Road2_MinUltraSensor_TriggerPin,Road2_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+  road2MaxUltraSensor=findDistanceFromUltraSonicSensorData(Road2_MaxUltraSensor_TriggerPin,Road2_MaxUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+
+  road3MinUltraSensor=findDistanceFromUltraSonicSensorData(Road3_MinUltraSensor_TriggerPin,Road3_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+  road3MaxUltraSensor=findDistanceFromUltraSonicSensorData(Road3_MaxUltraSensor_TriggerPin,Road3_MaxUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+
+  road4MinUltraSensor=findDistanceFromUltraSonicSensorData(Road4_MinUltraSensor_TriggerPin,Road4_MinUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+  road4MaxUltraSensor=findDistanceFromUltraSonicSensorData(Road4_MaxUltraSensor_TriggerPin,Road4_MaxUltraSensor_EchoPin)<=ThresholdValueUltraSonicSensor?1:0;
+
 }
+
 void loop() {
   
 }
