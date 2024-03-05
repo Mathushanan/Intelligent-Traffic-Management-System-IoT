@@ -23,6 +23,8 @@
 #define mediumDensityDuration  20
 #define highDensityDuration    30
 
+#define emergencyDuration 40
+
 #define Road1_MinUltraSensor_TriggerPin 13
 #define Road1_MinUltraSensor_EchoPin    14
 
@@ -87,7 +89,6 @@ int road4MaxUltraSensor=0;
 int roadDensity[4];
 int roadType[4]={1,2,3,4};
 
-bool emergencyVehiclePresent=false;
 
 
 
@@ -146,9 +147,9 @@ void setup() {
 
 void loop() {
   
-  checkForEmergencyVehicles();
 
-  if(emergencyVehiclePresent){
+
+  if(isEmergencyVehiclePresent()){
 
     genarateEmergencyBasedTrafficSignalProcess();
 
@@ -161,35 +162,61 @@ void loop() {
   
 }
 
+int EmergencyVehilePriotrization[4];
+
 void assignRfidSensorStatus(){
   
   if (Road1_mfrc522.PICC_IsNewCardPresent() && Road1_mfrc522.PICC_ReadCardSerial()) {
 
-    iisRoad1_Rfid_Detected = true;
+    isRoad1_Rfid_Detected = true;
+    EmergencyVehilePriotrization[0]=1;
 
-  } else {
 
-    isRoad1_Rfid_Detected = false;
+  }
+  if (Road2_mfrc522.PICC_IsNewCardPresent() && Road2_mfrc522.PICC_ReadCardSerial()) {
+
+    isRoad2_Rfid_Detected = true;
+    EmergencyVehilePriotrization[1]=2;
+
+  }
+  if (Road3_mfrc522.PICC_IsNewCardPresent() && Road3_mfrc522.PICC_ReadCardSerial()) {
+
+    isRoad3_Rfid_Detected = true;
+    EmergencyVehilePriotrization[2]=3;
+
+  }
+  if (Road4_mfrc522.PICC_IsNewCardPresent() && Road4_mfrc522.PICC_ReadCardSerial()) {
+
+    isRoad4_Rfid_Detected = true;
+    EmergencyVehilePriotrization[3]=4;
 
   }
 
 }
 
-void checkForEmergencyVehicles(){
 
-  if(isEmergencyVehiclePresent()){
+bool isEmergencyVehiclePresent(){
 
-    emergencyVehiclePresent=true;
+  if(isRoad1_Rfid_Detected||isRoad2_Rfid_Detected||isRoad3_Rfid_Detected||isRoad4_Rfid_Detected){
+
+    return true;
+
+  }else{
+
+    return false;
 
   }
 
 }
 
-void isEmergencyVehiclePresent(){
 
-}
+int roadType[4]={1,2,3,4};
 
 void genarateEmergencyBasedTrafficSignalProcess(){
+
+
+
+
 
 }
 
