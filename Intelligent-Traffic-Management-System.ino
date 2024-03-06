@@ -1,5 +1,10 @@
-#include <SPI.h>
 #include <MFRC522.h>
+#include <MFRC522Extended.h>
+#include <deprecated.h>
+#include <require_cpp11.h>
+
+#include <SPI.h>
+
 
 #define road1RedLedPin    1
 #define road1GreenLedPin  2
