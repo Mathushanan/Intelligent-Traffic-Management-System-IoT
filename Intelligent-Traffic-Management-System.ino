@@ -105,9 +105,13 @@ void openSuitableRoad(int roadNumber);
 void openRoadsInOrder();
 void genarateDensityBasedTrafficSignalProcess();
 
-void checkForEmergencyVehicles();
-void isEmergencyVehiclePresent();
+
+
+void assignRfidSensorStatus();
+bool isEmergencyVehiclePresent();
 void genarateEmergencyBasedTrafficSignalProcess();
+
+
 
 
 
@@ -147,8 +151,6 @@ void setup() {
 
 void loop() {
   
-
-
   if(isEmergencyVehiclePresent()){
 
     genarateEmergencyBasedTrafficSignalProcess();
@@ -158,8 +160,7 @@ void loop() {
     genarateDensityBasedTrafficSignalProcess();
 
   }
-  
-  
+    
 }
 
 int EmergencyVehilePriotrization[4];
@@ -170,7 +171,6 @@ void assignRfidSensorStatus(){
 
     isRoad1_Rfid_Detected = true;
     EmergencyVehilePriotrization[0]=1;
-
 
   }
   if (Road2_mfrc522.PICC_IsNewCardPresent() && Road2_mfrc522.PICC_ReadCardSerial()) {
@@ -197,6 +197,8 @@ void assignRfidSensorStatus(){
 
 bool isEmergencyVehiclePresent(){
 
+  assignRfidSensorStatus();
+
   if(isRoad1_Rfid_Detected||isRoad2_Rfid_Detected||isRoad3_Rfid_Detected||isRoad4_Rfid_Detected){
 
     return true;
@@ -210,15 +212,42 @@ bool isEmergencyVehiclePresent(){
 }
 
 
-int roadType[4]={1,2,3,4};
-
 void genarateEmergencyBasedTrafficSignalProcess(){
 
+  for(int i=0;i<4;i++){
 
+    if(EmergencyVehilePriotrization[i]==1){
+      openRoad1();
+      isRoad1_Rfid_Detected=false;
+    }
+    if(EmergencyVehilePriotrization[i]==2){
+      openRoad2();
+      isRoad2_Rfid_Detected=false;
+    }
+    if(EmergencyVehilePriotrization[i]==3){
+      openRoad3();
+      isRoad3_Rfid_Detected=false;
+    }
+    if(EmergencyVehilePriotrization[i]==4){
+      openRoad4();
+      isRoad4_Rfid_Detected=false;
+    }
 
-
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 void genarateDensityBasedTrafficSignalProcess(){
   
