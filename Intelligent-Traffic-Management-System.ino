@@ -28,6 +28,10 @@
 #define mediumDensityDuration  20
 #define highDensityDuration    30
 
+#define lowDensityValue     100
+#define mediumDensityValue  200
+#define highDensityValue    300
+
 #define emergencyDuration 40
 
 #define Road1_MinUltraSensor_TriggerPin 13
@@ -91,15 +95,17 @@ int road3MaxUltraSensor=0;
 int road4MinUltraSensor=0;
 int road4MaxUltraSensor=0;
 
-int roadDensity[4];
+int roadDensity[4]={0,0,0,0};
 int roadType[4]={1,2,3,4};
+
+int EmergencyVehilePriotrization[4];
 
 
 
 
 void assignUltraSonicSensorStatus();
 int findDistanceFromUltraSonicSensorData(int triggerPin,int echoPin);
-String getRoadDensity(String roadType);
+int getRoadDensity(String roadType);
 void assignRoadDensity();
 void sortRoadsInDecendingOrder();
 void openRoad1(int greenLightDuration);
@@ -131,25 +137,25 @@ void setup() {
   Road3_mfrc522.PCD_Init(); 
   Road4_mfrc522.PCD_Init(); 
  
-  pinMode(Road1_Sensor1_TriggerPin, OUTPUT); 
-  pinMode(Road1_Sensor1_EchoPin, INPUT);  
-  pinMode(Road1_Sensor2_TriggerPin, OUTPUT); 
-  pinMode(Road1_Sensor2_EchoPin, INPUT);  
+  pinMode(Road1_MinUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road1_MinUltraSensor_EchoPin, INPUT);  
+  pinMode(Road1_MaxUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road1_MaxUltraSensor_EchoPin, INPUT);  
 
-  pinMode(Road2_Sensor1_TriggerPin, OUTPUT); 
-  pinMode(Road2_Sensor1_EchoPin, INPUT);  
-  pinMode(Road2_Sensor2_TriggerPin, OUTPUT); 
-  pinMode(Road2_Sensor2_EchoPin, INPUT);  
+  pinMode(Road2_MinUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road2_MinUltraSensor_EchoPin, INPUT);  
+  pinMode(Road2_MaxUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road2_MaxUltraSensor_EchoPin, INPUT);  
 
-  pinMode(Road3_Sensor1_TriggerPin, OUTPUT); 
-  pinMode(Road3_Sensor1_EchoPin, INPUT);  
-  pinMode(Road3_Sensor2_TriggerPin, OUTPUT); 
-  pinMode(Road3_Sensor2_EchoPin, INPUT); 
+  pinMode(Road3_MinUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road3_MinUltraSensor_EchoPin, INPUT);  
+  pinMode(Road3_MaxUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road3_MaxUltraSensor_EchoPin, INPUT);  
    
-  pinMode(Road4_Sensor1_TriggerPin, OUTPUT); 
-  pinMode(Road4_Sensor1_EchoPin, INPUT);  
-  pinMode(Road4_Sensor2_TriggerPin, OUTPUT); 
-  pinMode(Road4_Sensor2_EchoPin, INPUT);  
+  pinMode(Road3_MinUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road3_MinUltraSensor_EchoPin, INPUT);  
+  pinMode(Road3_MaxUltraSensor_TriggerPin, OUTPUT); 
+  pinMode(Road3_MaxUltraSensor_EchoPin, INPUT);  
 
 }
 
@@ -168,7 +174,43 @@ void loop() {
     
 }
 
-int EmergencyVehilePriotrization[4];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bool isEmergencyVehiclePresent(){
+
+  assignRfidSensorStatus();
+
+  if(isRoad1_Rfid_Detected||isRoad2_Rfid_Detected||isRoad3_Rfid_Detected||isRoad4_Rfid_Detected){
+
+    return true;
+
+  }else{
+
+    return false;
+
+  }
+
+}
 
 void assignRfidSensorStatus(){
   
@@ -200,41 +242,24 @@ void assignRfidSensorStatus(){
 }
 
 
-bool isEmergencyVehiclePresent(){
-
-  assignRfidSensorStatus();
-
-  if(isRoad1_Rfid_Detected||isRoad2_Rfid_Detected||isRoad3_Rfid_Detected||isRoad4_Rfid_Detected){
-
-    return true;
-
-  }else{
-
-    return false;
-
-  }
-
-}
-
-
 void genarateEmergencyBasedTrafficSignalProcess(){
 
   for(int i=0;i<4;i++){
 
     if(EmergencyVehilePriotrization[i]==1){
-      openRoad1();
+      openRoad1(emergencyDuration);
       isRoad1_Rfid_Detected=false;
     }
     if(EmergencyVehilePriotrization[i]==2){
-      openRoad2();
+      openRoad2(emergencyDuration);
       isRoad2_Rfid_Detected=false;
     }
     if(EmergencyVehilePriotrization[i]==3){
-      openRoad3();
+      openRoad3(emergencyDuration);
       isRoad3_Rfid_Detected=false;
     }
     if(EmergencyVehilePriotrization[i]==4){
-      openRoad4();
+      openRoad4(emergencyDuration);
       isRoad4_Rfid_Detected=false;
     }
 
@@ -300,24 +325,24 @@ int findDistanceFromUltraSonicSensorData(int triggerPin,int echoPin){
   digitalWrite(triggerPin, LOW);
 
   duration = pulseIn(echoPin, HIGH);
-  distance = duration_1 * 0.034 / 2;
+  distance = duration * 0.034 / 2;
 
   return distance;
 
 }
 
-String getRoadDensity(String roadType){
+int getRoadDensity(String roadType){
 
   if(roadType=="road1"){
 
     if(road1MinUltraSensor==0 && road1MaxUltraSensor==0){
-      return "low density";
+      return lowDensityValue;
     }
     if(road1MinUltraSensor==1 && road1MaxUltraSensor==0){
-      return "medium density";
+      return mediumDensityValue;
     }
     if(road1MinUltraSensor==1 && road1MaxUltraSensor==1){
-      return "high density";
+      return highDensityValue;
     }
 
 
@@ -325,39 +350,39 @@ String getRoadDensity(String roadType){
   else if(roadType=="road2"){
 
     if(road2MinUltraSensor==0 && road2MaxUltraSensor==0){
-      return "low density";
+      return lowDensityValue;
     }
     if(road2MinUltraSensor==1 && road2MaxUltraSensor==0){
-      return "medium density";
+      return mediumDensityValue;
     }
     if(road2MinUltraSensor==1 && road2MaxUltraSensor==1){
-      return "high density";
+      return highDensityValue;
     }
 
   }
   else if(roadType=="road3"){
 
     if(road3MinUltraSensor==0 && road3MaxUltraSensor==0){
-      return "low density";
+      return lowDensityValue;
     }
     if(road3MinUltraSensor==1 && road3MaxUltraSensor==0){
-      return "medium density";
+      return mediumDensityValue;
     }
     if(road3MinUltraSensor==1 && road3MaxUltraSensor==1){
-      return "high density";
+      return highDensityValue;
     }
 
   }
   else{
 
     if(road4MinUltraSensor==0 && road4MaxUltraSensor==0){
-      return "low density";
+      return lowDensityValue;
     }
     if(road4MinUltraSensor==1 && road4MaxUltraSensor==0){
-      return "medium density";
+      return mediumDensityValue;
     }
     if(road4MinUltraSensor==1 && road4MaxUltraSensor==1){
-      return "high density";
+      return highDensityValue;
     }
 
   }
@@ -369,7 +394,7 @@ void sortRoadsInDecendingOrder(){
 
   for(int i=0;i<3;i++){
 
-    for(int j=0;j<3-i);j++){
+    for(int j=0;j<3-i;j++){
 
       if(roadDensity[j]<roadDensity[j+1]){
         
@@ -389,29 +414,65 @@ void sortRoadsInDecendingOrder(){
 
 void openRoadsInOrder(){
 
-  openSuitableRoad(roadType[0]);
-  openSuitableRoad(roadType[1]);
-  openSuitableRoad(roadType[2]);
-  openSuitableRoad(roadType[3]);
+  openSuitableRoad(roadType[0],roadDensity[0]);
+  openSuitableRoad(roadType[1],roadDensity[1]);
+  openSuitableRoad(roadType[2],roadDensity[2]);
+  openSuitableRoad(roadType[3],roadDensity[3]);
 
 }
 
-void openSuitableRoad(int roadNumber){
+void openSuitableRoad(int roadNumber,int roadDensity){
 
   if(roadNumber==1){
-    openRoad1();
+    if(roadDensity==lowDensityValue){
+      openRoad1(lowDensityDuration);
+    }
+    if(roadDensity==mediumDensityValue){
+      openRoad1(mediumDensityDuration);
+    }
+    if(roadDensity==highDensityValue){
+      openRoad1(highDensityDuration);
+    }
+    
   }
 
   if(roadNumber==2){
-    openRoad2();
+    if(roadDensity==lowDensityValue){
+      openRoad2(lowDensityDuration);
+    }
+    if(roadDensity==mediumDensityValue){
+      openRoad2(mediumDensityDuration);
+    }
+    if(roadDensity==highDensityValue){
+      openRoad2(highDensityDuration);
+    }
+    
   }
 
   if(roadNumber==3){
-    openRoad3();
+    if(roadDensity==lowDensityValue){
+      openRoad3(lowDensityDuration);
+    }
+    if(roadDensity==mediumDensityValue){
+      openRoad3(mediumDensityDuration);
+    }
+    if(roadDensity==highDensityValue){
+      openRoad3(highDensityDuration);
+    }
+    
   }
 
   if(roadNumber==4){
-    openRoad4();
+    if(roadDensity==lowDensityValue){
+      openRoad4(lowDensityDuration);
+    }
+    if(roadDensity==mediumDensityValue){
+      openRoad4(mediumDensityDuration);
+    }
+    if(roadDensity==highDensityValue){
+      openRoad4(highDensityDuration);
+    }
+    
   }
 
 }
